@@ -1,0 +1,6 @@
+syntax: glob
+NitrotervOutlookAddIn/.vs/NitrotervOutlookAddIn/v14/
+NitrotervOutlookAddIn/NitrotervOutlookAddIn/NitrotervOutlookAddinSetup/
+NitrotervOutlookAddIn/NitrotervOutlookAddIn/bin/
+NitrotervOutlookAddIn/NitrotervOutlookAddIn/obj/
+NitrotervOutlookAddIn/NitrotervOutlookAddIn/publish/
