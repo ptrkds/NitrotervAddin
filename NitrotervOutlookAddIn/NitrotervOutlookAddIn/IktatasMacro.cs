@@ -10,8 +10,9 @@ namespace NitrotervOutlookAddIn
 {
     public partial class IktatasMacro
     {
-        private void IktatasMacro_Load(object sender, RibbonUIEventArgs e)
+        public void loadProjectFile()
         {
+            projektekDropDown.Items.Clear();
 
             //combobox from file
             int counter = 0;
@@ -34,7 +35,13 @@ namespace NitrotervOutlookAddIn
             {
                 MessageBox.Show("Nem létezik a projektnyilvántartási file.", "File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
 
+        private void IktatasMacro_Load(object sender, RibbonUIEventArgs e)
+        {
+
+
+            loadProjectFile();
 
 
             //click event

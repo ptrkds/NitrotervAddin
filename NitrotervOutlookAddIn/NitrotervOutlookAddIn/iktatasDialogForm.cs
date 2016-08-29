@@ -39,9 +39,12 @@ namespace NitrotervOutlookAddIn
         {
             local_path = Globals.ThisAddIn.getDefaultLocalPath();
             network_path = Globals.ThisAddIn.getDefaultNetworkPath();
+            project_file = Globals.ThisAddIn.getDefaultProjectnameFile();
 
             localPathTextBox.Text = local_path;
             networkPathTextBox.Text = network_path;
+            projectFileTextBox.Text = project_file;
+
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -51,6 +54,8 @@ namespace NitrotervOutlookAddIn
             Globals.ThisAddIn.setProjectnameFile(project_file);
 
             Globals.ThisAddIn.dataFileFunction();
+
+            Globals.Ribbons.IktatasMacro.loadProjectFile();
 
             this.Close();
         }
@@ -75,10 +80,13 @@ namespace NitrotervOutlookAddIn
 
         private void projectFileTextBox_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Filter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+
                 this.projectFileTextBox.Text = openFileDialog1.FileName;
-                project_file = this.networkPathTextBox.Text;
+                project_file = this.projectFileTextBox.Text;
             }
         }
     }
