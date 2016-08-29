@@ -18,7 +18,7 @@ namespace NitrotervOutlookAddIn
 
         public static string data_file = @"D:\\path.txt";
 
-        static string default_network_path = "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
+        static string default_network_path = "D:\\Iktatasra";  // "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
         static string default_local_path = "D:\\local_puffer";
 
         private static string default_projectname_file =
@@ -208,22 +208,9 @@ namespace NitrotervOutlookAddIn
                     {
                         mailItem = (selObject as Outlook.MailItem);
                     }
-                    else if (selObject is Outlook.ContactItem)
+                    else
                     {
-                        MessageBox.Show("Wrong MailItem!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else if (selObject is Outlook.AppointmentItem)
-                    {
-                        MessageBox.Show("Wrong MailItem!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                    }
-                    else if (selObject is Outlook.TaskItem)
-                    {
-                        MessageBox.Show("Wrong MailItem!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else if (selObject is Outlook.MeetingItem)
-                    {
-                        MessageBox.Show("Wrong MailItem!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        mailItem = null;
                     }
                 }
             }
@@ -239,6 +226,9 @@ namespace NitrotervOutlookAddIn
         {
             string[] dirs = { "" };
 
+            if (mailItem == null)
+                return;
+
             try
             {
                 if (System.IO.Directory.Exists(network_path))
@@ -248,7 +238,7 @@ namespace NitrotervOutlookAddIn
                     //Note: 
                     // .../dir1/asdproject and .../dir1/project are also found!!
 
-                    mailItem.SaveAs(network_path + "\\" + nameBuilder(project, mailItem.Subject) + ".msg");
+                    mailItem.SaveAs(network_path + "\\" + nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)) + ".msg");
                     //mailItem.SaveAs(dirs[0] + "\\" + nameBuilder(project, mailItem.Subject) + ".msg");
                     //mailItem.Categories = "Iktatva";
                     mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
@@ -267,7 +257,7 @@ namespace NitrotervOutlookAddIn
                         di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
                     }
 
-                    mailItem.SaveAs(local_path + "\\" + nameBuilder(project, mailItem.Subject) + ".msg");
+                    mailItem.SaveAs(pathBuilder(project));
                     mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
 
                     MessageBox.Show("Sikertelen hálózati mentés", "Sikertelen iktatásra küldés!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -293,12 +283,47 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        public string nameBuilder(string project, string subject)
+        private string nameBuilder(string project, string subject, string date)
         {
-            subject = Regex.Replace(subject, @"\s+", "_");
-            subject = Regex.Replace(subject, "[^\\w\\d]", "");
-            
-            return "[" + project + "]" + subject;
+            try
+            {
+                subject = Regex.Replace(subject, @"\s+", "_");
+                subject = Regex.Replace(subject, "[^\\w\\d]", "");
+                return "[" + project + "]" + "[" + date + "]" + subject;
+            }
+            catch (Exception)
+            {
+                throw;
+            }  
+        }
+
+        private string dateBuilder(DateTime date)
+        {
+            try
+            {
+                return String.Format("{0:yyMMdd}", date);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private string pathBuilder(string project)
+        {
+            try
+            {
+                string ret = local_path + "\\" + nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)) +
+                                 ".msg";
+                if (ret.Length > 250)
+                    ret = ret.Remove(250);
+
+                return ret;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
