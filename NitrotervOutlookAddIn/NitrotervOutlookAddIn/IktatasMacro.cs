@@ -19,7 +19,7 @@ namespace NitrotervOutlookAddIn
             try
             {
                 //StreamReader file = new StreamReader(Globals.ThisAddIn.getPath() + "\\projektnyilvántartás.txt");
-                StreamReader file = new StreamReader("C:\\Users\\fabianb\\Desktop\\Minta könyvtárstruktúra\\projektnyilvántartás.txt");
+                StreamReader file = new StreamReader(Globals.ThisAddIn.getProjectnameFile());
 
                 while ((line = file.ReadLine()) != null)
                 {
@@ -41,6 +41,7 @@ namespace NitrotervOutlookAddIn
             this.iktatasButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.iktatasButton_Click);
             this.localCheckButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.localCheckButton_Click);
             this.iktatasGroup.DialogLauncherClick += new RibbonControlEventHandler(this.iktatasGroup_DialogLauncherClick);
+            
         }
 
 

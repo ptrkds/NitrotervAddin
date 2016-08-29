@@ -1,4 +1,6 @@
-﻿namespace NitrotervOutlookAddIn
+﻿using System.Security.AccessControl;
+
+namespace NitrotervOutlookAddIn
 {
     partial class iktatasDialogForm
     {
@@ -37,11 +39,14 @@
             this.localPathTextBox = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
+            this.projectFileTextBox = new System.Windows.Forms.TextBox();
+            this.projectFileLabel = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(12, 116);
+            this.saveButton.Location = new System.Drawing.Point(12, 158);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 0;
@@ -51,7 +56,7 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(124, 116);
+            this.resetButton.Location = new System.Drawing.Point(124, 158);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 23);
             this.resetButton.TabIndex = 1;
@@ -79,7 +84,7 @@
             // 
             // backButton
             // 
-            this.backButton.Location = new System.Drawing.Point(239, 116);
+            this.backButton.Location = new System.Drawing.Point(239, 158);
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(75, 23);
             this.backButton.TabIndex = 6;
@@ -105,11 +110,35 @@
             this.localPathTextBox.TabIndex = 4;
             this.localPathTextBox.Click += new System.EventHandler(this.localPathTextBox_Click);
             // 
+            // projectFileTextBox
+            // 
+            this.projectFileTextBox.Location = new System.Drawing.Point(139, 115);
+            this.projectFileTextBox.Name = "projectFileTextBox";
+            this.projectFileTextBox.ReadOnly = true;
+            this.projectFileTextBox.Size = new System.Drawing.Size(175, 20);
+            this.projectFileTextBox.TabIndex = 8;
+            this.projectFileTextBox.Click += new System.EventHandler(this.projectFileTextBox_Click);
+            // 
+            // projectFileLabel
+            // 
+            this.projectFileLabel.AutoSize = true;
+            this.projectFileLabel.Location = new System.Drawing.Point(13, 118);
+            this.projectFileLabel.Name = "projectFileLabel";
+            this.projectFileLabel.Size = new System.Drawing.Size(120, 13);
+            this.projectFileLabel.TabIndex = 7;
+            this.projectFileLabel.Text = "Projekt nyilvántartási fájl";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // iktatasDialogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(333, 154);
+            this.ClientSize = new System.Drawing.Size(333, 195);
+            this.Controls.Add(this.projectFileTextBox);
+            this.Controls.Add(this.projectFileLabel);
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.networkPathTextBox);
             this.Controls.Add(this.localPathTextBox);
@@ -136,5 +165,8 @@
         private System.Windows.Forms.TextBox localPathTextBox;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
+        private System.Windows.Forms.TextBox projectFileTextBox;
+        private System.Windows.Forms.Label projectFileLabel;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

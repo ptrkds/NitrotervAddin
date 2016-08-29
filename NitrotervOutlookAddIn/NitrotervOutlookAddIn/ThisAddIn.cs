@@ -13,29 +13,30 @@ namespace NitrotervOutlookAddIn
 {
     public partial class ThisAddIn
     {
-
-
-        private static string path = "D:\\IKTATAS";
-
-
         private Outlook.Explorer currentExplorer = null;
         Outlook.MailItem mailItem;
-        //string network_path = path + "\\net_puffer";
-        //string local_path = path + "\\local_puffer";
+
+        public static string data_file = @"D:\\folder\\path.txt";
 
         static string default_network_path = "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
         static string default_local_path = "D:\\local_puffer";
 
-
-        static string network_path = default_network_path;
-        static string local_path = default_local_path;
-
+        private static string default_projectname_file =
+            "D:\\projektnyilvántartás.txt";
 
 
+        public static string network_path = default_network_path;
+        public static string local_path = default_local_path;
+        public static string projectname_file = default_projectname_file;
 
-        public string getPath()
+
+        public string getProjectnameFile()
         {
-            return path;
+            return projectname_file;
+        }
+        public void setProjectnameFile(string value)
+        {
+            projectname_file = value;
         }
 
         public string getDefaultLocalPath()
@@ -64,12 +65,64 @@ namespace NitrotervOutlookAddIn
             network_path = _network_path;
         }
 
+        public void dataFileFunction()
+        {
+            string[] lines = { network_path, local_path, projectname_file };
+
+            using (StreamWriter file = new StreamWriter(data_file, false))
+            {
+                foreach (string line in lines)
+                {
+
+                    file.WriteLine(line);
+
+                }
+            }
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             currentExplorer = this.Application.ActiveExplorer();
             currentExplorer.SelectionChange += new Outlook
                 .ExplorerEvents_10_SelectionChangeEventHandler
                 (CurrentExplorer_Event);
+
+            try
+            {
+                if (!File.Exists(data_file))
+                {
+                    FileStream fs = new FileStream(data_file, FileMode.Create);
+
+                    fs.Close();
+
+                    string[] lines = { network_path, local_path, projectname_file };
+
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(data_file))
+                    {
+                        foreach (string line in lines)
+                        {
+
+                            file.WriteLine(line);
+                            
+                        }
+                    }
+
+                    File.SetAttributes(data_file, FileAttributes.Hidden);
+
+                }
+                else
+                {
+                    string[] lines = new string[3];
+                    lines = File.ReadAllLines(data_file);
+                    network_path = lines[0];
+                    local_path = lines[1];
+                    projectname_file = lines[2];
+                }
+            }
+            catch (Exception exeption)
+            {
+                MessageBox.Show(exeption.ToString(), "Sikertelen data_file olvasás.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
 
             //local check
