@@ -14,6 +14,7 @@ namespace NitrotervOutlookAddIn
     {
         string local_path;
         string network_path;
+        string project_file;
         public iktatasDialogForm()
         {
             InitializeComponent();
@@ -23,8 +24,10 @@ namespace NitrotervOutlookAddIn
         {
             local_path = Globals.ThisAddIn.getLocalPath();
             network_path = Globals.ThisAddIn.getNetworkPath();
+            project_file = Globals.ThisAddIn.getProjectnameFile();
             localPathTextBox.Text = local_path;
             networkPathTextBox.Text = network_path;
+            projectFileTextBox.Text = project_file;
         }
 
         private void backButton_Click(object sender, EventArgs e)
@@ -45,6 +48,9 @@ namespace NitrotervOutlookAddIn
         {
             Globals.ThisAddIn.setLocalPath(local_path);
             Globals.ThisAddIn.setNetworkPath(network_path);
+            Globals.ThisAddIn.setProjectnameFile(project_file);
+
+            Globals.ThisAddIn.dataFileFunction();
 
             this.Close();
         }
@@ -62,8 +68,17 @@ namespace NitrotervOutlookAddIn
         {
             if (folderBrowserDialog2.ShowDialog() == DialogResult.OK)
             {
-                this.networkPathTextBox.Text = folderBrowserDialog1.SelectedPath;
+                this.networkPathTextBox.Text = folderBrowserDialog2.SelectedPath;
                 network_path = this.networkPathTextBox.Text;
+            }
+        }
+
+        private void projectFileTextBox_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                this.projectFileTextBox.Text = openFileDialog1.FileName;
+                project_file = this.networkPathTextBox.Text;
             }
         }
     }
