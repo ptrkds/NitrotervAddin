@@ -16,7 +16,7 @@ namespace NitrotervOutlookAddIn
         private Outlook.Explorer currentExplorer = null;
         Outlook.MailItem mailItem;
 
-        public static string data_file = @"D:\\folder\\path.txt";
+        public static string data_file = @"D:\\path.txt";
 
         static string default_network_path = "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
         static string default_local_path = "D:\\local_puffer";
@@ -37,6 +37,11 @@ namespace NitrotervOutlookAddIn
         public void setProjectnameFile(string value)
         {
             projectname_file = value;
+        }
+
+        public string getDefaultProjectnameFile()
+        {
+            return default_projectname_file;
         }
 
         public string getDefaultLocalPath()
@@ -69,7 +74,17 @@ namespace NitrotervOutlookAddIn
         {
             string[] lines = { network_path, local_path, projectname_file };
 
-            using (StreamWriter file = new StreamWriter(data_file, false))
+            if (File.Exists(data_file))
+            {
+                File.Delete(data_file);
+            }
+
+            FileStream fs = new FileStream(data_file, FileMode.Create);
+
+            fs.Close();
+
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(data_file))
             {
                 foreach (string line in lines)
                 {
@@ -78,6 +93,8 @@ namespace NitrotervOutlookAddIn
 
                 }
             }
+
+            File.SetAttributes(data_file, FileAttributes.Hidden);
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)

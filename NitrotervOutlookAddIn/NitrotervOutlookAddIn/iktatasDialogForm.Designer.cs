@@ -56,7 +56,7 @@ namespace NitrotervOutlookAddIn
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(124, 158);
+            this.resetButton.Location = new System.Drawing.Point(126, 158);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 23);
             this.resetButton.TabIndex = 1;
