@@ -18,7 +18,7 @@ namespace NitrotervOutlookAddIn
 
         public static string data_file = @"D:\\path.txt";
 
-        static string default_network_path = "D:\\Iktatasra";  // "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
+        static string default_network_path = "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
         static string default_local_path = "D:\\local_puffer";
 
         private static string default_projectname_file =
@@ -313,10 +313,11 @@ namespace NitrotervOutlookAddIn
         {
             try
             {
-                string ret = local_path + "\\" + nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)) +
-                                 ".msg";
+                string ret = local_path + "\\" + nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn));
                 if (ret.Length > 250)
                     ret = ret.Remove(250);
+
+                ret += ".msg";
 
                 return ret;
             }
