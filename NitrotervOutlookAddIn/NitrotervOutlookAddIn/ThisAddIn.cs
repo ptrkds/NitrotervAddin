@@ -174,9 +174,28 @@ namespace NitrotervOutlookAddIn
                         foreach (string file in local_files)
                         {
                             FileInfo mFile = new FileInfo(file);
+
+                            string path = network_path + "\\" + Path.GetFileNameWithoutExtension(mFile.Name);
+
                             // to remove name collusion
                             if (new FileInfo(network_path + "\\" + mFile.Name).Exists == false)
+
                                 mFile.MoveTo(network_path + "\\" + mFile.Name);
+
+                            else
+                            {
+                                int counter = 1;
+                                string saveAs = path + "_" + counter + ".msg";
+
+                                while (new FileInfo(saveAs).Exists == true)
+                                {
+                                    counter ++;
+                                    saveAs = path + "_" + counter + ".msg";
+                                }
+
+                                mFile.MoveTo(saveAs);
+
+                            }
                         }
 
                         MessageBox.Show("Sikeres továbbitás a hálózati iktatás mappába!", "Sikeres művelet", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -238,11 +257,21 @@ namespace NitrotervOutlookAddIn
                     //Note: 
                     // .../dir1/asdproject and .../dir1/project are also found!!
 
-                    mailItem.SaveAs(network_path + "\\" + nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)) + ".msg");
+                    mailItem.SaveAs(nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)));
                     //mailItem.SaveAs(dirs[0] + "\\" + nameBuilder(project, mailItem.Subject) + ".msg");
                     //mailItem.Categories = "Iktatva";
-                    mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
-
+                    try
+                    {
+                        var customCat = "Iktatásra küldve";
+                        if (Application.Session.Categories[customCat] == null)
+                            Application.Session.Categories.Add(customCat, Outlook.OlCategoryColor.olCategoryColorDarkRed);
+                        mailItem.Categories = customCat;
+                        //mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Sikertelen kategorizálás", "Sikertelen kategorizálás!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
 
                     MessageBox.Show("Sikeres hálózati mentés", "Sikeresen elküldve iktatásra!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -257,7 +286,7 @@ namespace NitrotervOutlookAddIn
                         di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
                     }
 
-                    mailItem.SaveAs(pathBuilder(project));
+                    mailItem.SaveAs(nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)));
                     mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
 
                     MessageBox.Show("Sikertelen hálózati mentés", "Sikertelen iktatásra küldés!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -287,9 +316,48 @@ namespace NitrotervOutlookAddIn
         {
             try
             {
+                int counter = 1;
+
                 subject = Regex.Replace(subject, @"\s+", "_");
                 subject = Regex.Replace(subject, "[^\\w\\d]", "");
-                return "[" + project + "]" + "[" + date + "]" + subject;
+                string name = "[" + project + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+
+                string path;
+                if (System.IO.Directory.Exists(network_path))
+                {
+                    path = network_path + "\\" + name;
+                }
+                else
+                {
+                    path = local_path + "\\" + name;
+                }
+                if (path.Length > 245)
+                    path = path.Remove(245);
+
+                path += ".msg";
+
+                while (File.Exists(path))
+                {
+                    counter++;
+                    name = "[" + project + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+
+                    path = "";
+
+                    if (System.IO.Directory.Exists(network_path))
+                    {
+                        path = network_path + "\\" + name;
+                    }
+                    else
+                    {
+                        path = local_path + "\\" + name;
+                    }
+                    if (path.Length > 245)
+                        path = path.Remove(245);
+
+                    path += ".msg";
+                }
+
+                return path;
             }
             catch (Exception)
             {
@@ -309,23 +377,18 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        private string pathBuilder(string project)
+        /*private string pathBuilder(string project)
         {
             try
             {
-                string ret = local_path + "\\" + nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn));
-                if (ret.Length > 250)
-                    ret = ret.Remove(250);
+                
 
-                ret += ".msg";
-
-                return ret;
             }
             catch (Exception)
             {
                 throw;
             }
-        }
+        }*/
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
