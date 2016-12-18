@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Outlook;
+﻿using System.Diagnostics;
+using Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Tools.Ribbon;
 using System.Windows.Forms;
 
@@ -42,9 +43,10 @@ namespace NitrotervOutlookAddIn
             this.iktatasTab = this.Factory.CreateRibbonTab();
             this.iktatasGroup = this.Factory.CreateRibbonGroup();
             this.projektekDropDown = this.Factory.CreateRibbonDropDown();
-            this.iktatasButton = this.Factory.CreateRibbonButton();
-            this.separator1 = this.Factory.CreateRibbonSeparator();
             this.localCheckButton = this.Factory.CreateRibbonButton();
+            this.separator1 = this.Factory.CreateRibbonSeparator();
+            this.iktatasButton = this.Factory.CreateRibbonButton();
+            this.networkFolderButton = this.Factory.CreateRibbonButton();
             this.iktatasTab.SuspendLayout();
             this.iktatasGroup.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +63,7 @@ namespace NitrotervOutlookAddIn
             this.iktatasGroup.DialogLauncher = ribbonDialogLauncherImpl1;
             this.iktatasGroup.Items.Add(this.projektekDropDown);
             this.iktatasGroup.Items.Add(this.localCheckButton);
+            this.iktatasGroup.Items.Add(this.networkFolderButton);
             this.iktatasGroup.Items.Add(this.separator1);
             this.iktatasGroup.Items.Add(this.iktatasButton);
             this.iktatasGroup.Label = "Iktatás";
@@ -71,6 +74,17 @@ namespace NitrotervOutlookAddIn
             this.projektekDropDown.Label = "Projektek";
             this.projektekDropDown.Name = "projektekDropDown";
             // 
+            // localCheckButton
+            // 
+            this.localCheckButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
+            this.localCheckButton.Label = "Lokális Mappa Ellenőrzése";
+            this.localCheckButton.Name = "localCheckButton";
+            this.localCheckButton.ShowImage = true;
+            // 
+            // separator1
+            // 
+            this.separator1.Name = "separator1";
+            // 
             // iktatasButton
             // 
             this.iktatasButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
@@ -79,16 +93,12 @@ namespace NitrotervOutlookAddIn
             this.iktatasButton.Name = "iktatasButton";
             this.iktatasButton.ShowImage = true;
             // 
-            // separator1
+            // networkFolderButton
             // 
-            this.separator1.Name = "separator1";
-            // 
-            // localCheckButton
-            // 
-            this.localCheckButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
-            this.localCheckButton.Label = "Lokális Mappa Ellenőrzése";
-            this.localCheckButton.Name = "localCheckButton";
-            this.localCheckButton.ShowImage = true;
+            this.networkFolderButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
+            this.networkFolderButton.Label = "Hálózati Mappa Megnyitása";
+            this.networkFolderButton.Name = "networkFolderButton";
+            this.networkFolderButton.ShowImage = true;
             // 
             // IktatasMacro
             // 
@@ -130,10 +140,22 @@ namespace NitrotervOutlookAddIn
         }
 
 
-
         private void localCheckButton_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.ThisAddIn.LocalToNetwork();
+        }
+
+        private void networkFolderButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            if (System.IO.Directory.Exists(Globals.ThisAddIn.getNetworkPath()))
+            {
+                Process.Start(Globals.ThisAddIn.getNetworkPath());
+            }
+            else
+            {
+                Process.Start(Globals.ThisAddIn.getLocalPath());
+            }
+
         }
 
         private void iktatasGroup_DialogLauncherClick(object sender, Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs e)
@@ -143,6 +165,8 @@ namespace NitrotervOutlookAddIn
             iktatas_dialog.setPath();
             iktatas_dialog.Show();
         }
+
+        internal RibbonButton networkFolderButton;
     }
 
     partial class ThisRibbonCollection
