@@ -157,7 +157,6 @@ namespace NitrotervOutlookAddIn
         {
             try
             {
-                //TODO
                 if (System.IO.Directory.Exists(network_path))
                 {
 
@@ -265,6 +264,7 @@ namespace NitrotervOutlookAddIn
                         var customCat = "Iktatásra küldve";
                         if (Application.Session.Categories[customCat] == null)
                             Application.Session.Categories.Add(customCat, Outlook.OlCategoryColor.olCategoryColorDarkRed);
+
                         mailItem.Categories = customCat;
                         //mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
                     }
@@ -318,8 +318,16 @@ namespace NitrotervOutlookAddIn
             {
                 int counter = 1;
 
-                subject = Regex.Replace(subject, @"\s+", "_");
-                subject = Regex.Replace(subject, "[^\\w\\d]", "");
+                if (subject != null)
+                {
+                    subject = Regex.Replace(subject, @"\s+", "_");
+                    subject = Regex.Replace(subject, "[^\\w\\d]", "");
+                }
+                else
+                {
+                    subject = "";
+                }
+
                 string name = "[" + project + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
 
                 string path;
