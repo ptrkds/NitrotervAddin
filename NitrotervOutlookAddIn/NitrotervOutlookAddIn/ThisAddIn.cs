@@ -16,34 +16,51 @@ namespace NitrotervOutlookAddIn
         private Outlook.Explorer currentExplorer = null;
         Outlook.MailItem mailItem;
 
-        public static string data_file = @"D:\\path.txt";
+        public static string path = @"D:\\NitrotervOutlook";
 
-        static string default_network_path = "\\\\Nitroterv02\\e\\Tervezesi projektek\\2016\\16017 NZrt Pétisó üzem bővítés\\03 Adminisztráció\\_iktatásra";
-        static string default_local_path = "D:\\local_puffer";
+        public static string data_file = @"path.ini";
+        public static string projectname_file = "projektszamok.ini";
 
-        private static string default_projectname_file =
-            "D:\\projektnyilvántartás.txt";
+        static string default_network_path = "D:\\Nitroterv02server\\Iktatásra";
+        static string default_local_path = "local_puffer";
+        static string default_server_path = "D:\\Nitroterv02server\\Tervezesi projektek\\";
 
 
         public static string network_path = default_network_path;
         public static string local_path = default_local_path;
-        public static string projectname_file = default_projectname_file;
+        public static string server_path = default_server_path;
 
+        public List<String> yearList;
+        public SortedDictionary<String, List<String>> projectNumberList; 
 
+        public string getDefaultServerPath()
+        {
+            return default_server_path;
+        }
+
+        public string getServerPath()
+        {
+            return server_path;
+        }
+
+        public void setServerPath(string value)
+        {
+            server_path = value;
+        }
+        public void setPath(string value)
+        {
+            path = value;
+        }
+
+        public string getPath()
+        {
+            return path;
+        }
         public string getProjectnameFile()
         {
             return projectname_file;
         }
-        public void setProjectnameFile(string value)
-        {
-            projectname_file = value;
-        }
-
-        public string getDefaultProjectnameFile()
-        {
-            return default_projectname_file;
-        }
-
+        
         public string getDefaultLocalPath()
         {
             return default_local_path;
@@ -72,19 +89,19 @@ namespace NitrotervOutlookAddIn
 
         public void dataFileFunction()
         {
-            string[] lines = { network_path, local_path, projectname_file };
+            string[] lines = { network_path, local_path, server_path };
 
-            if (File.Exists(data_file))
+            if (File.Exists(path + "\\" + data_file))
             {
-                File.Delete(data_file);
+                File.Delete(path + "\\" + data_file);
             }
 
-            FileStream fs = new FileStream(data_file, FileMode.Create);
+            FileStream fs = new FileStream(path + "\\" + data_file, FileMode.Create);
 
             fs.Close();
 
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(data_file))
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "\\" + data_file))
             {
                 foreach (string line in lines)
                 {
@@ -94,7 +111,7 @@ namespace NitrotervOutlookAddIn
                 }
             }
 
-            File.SetAttributes(data_file, FileAttributes.Hidden);
+            File.SetAttributes(path + "\\" + data_file, FileAttributes.Hidden);
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
@@ -106,15 +123,23 @@ namespace NitrotervOutlookAddIn
 
             try
             {
-                if (!File.Exists(data_file))
+                //create path
+                if (!Directory.Exists(path))
                 {
-                    FileStream fs = new FileStream(data_file, FileMode.Create);
+                    var di = Directory.CreateDirectory(path);
+                    di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+                }
+
+                //create datafile ini
+                if (!File.Exists(path + "\\" + data_file))
+                {
+                    FileStream fs = new FileStream(path + "\\" + data_file, FileMode.Create);
 
                     fs.Close();
 
-                    string[] lines = { network_path, local_path, projectname_file };
+                    string[] lines = { network_path, local_path, server_path };
 
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(data_file))
+                    using (StreamWriter file = new StreamWriter(path + "\\" + data_file))
                     {
                         foreach (string line in lines)
                         {
@@ -124,21 +149,97 @@ namespace NitrotervOutlookAddIn
                         }
                     }
 
-                    File.SetAttributes(data_file, FileAttributes.Hidden);
+                    File.SetAttributes(path + "\\" + data_file, FileAttributes.Hidden);
 
                 }
                 else
                 {
                     string[] lines = new string[3];
-                    lines = File.ReadAllLines(data_file);
+                    lines = File.ReadAllLines(path + "\\" + data_file);
                     network_path = lines[0];
                     local_path = lines[1];
-                    projectname_file = lines[2];
+                    server_path = lines[2];
                 }
+
+
+                if (Directory.Exists(server_path))
+                {
+                    yearList = new List<string>();
+                    projectNumberList = new SortedDictionary<string, List<string>>();
+
+                    yearList = new List<string>(Directory.GetDirectories(server_path).Select(d => new DirectoryInfo(d).Name));
+
+                    foreach (string year in yearList)
+                    {
+
+                        List<String> projectNumbers = new List<String>(  Directory.GetDirectories(server_path + "\\" + year).Select(d => new DirectoryInfo(d).Name));
+
+                        for (int i=0; i<projectNumbers.Count; i++)
+                        {
+                            projectNumbers[i] = projectNumbers[i].Substring(0, 5);
+                        }
+
+                        projectNumberList[year] = projectNumbers;
+                    }
+
+                    //kiiras fajlba
+                    if (File.Exists(path + "\\" + projectname_file))
+                    {
+                        File.Delete(path + "\\" + projectname_file);
+                    }
+
+                    FileStream fs = new FileStream(path + "\\" + projectname_file, FileMode.Create);
+
+                    fs.Close();
+
+                    using (StreamWriter file = new StreamWriter(path + "\\" + projectname_file))
+                    {
+                        foreach (string year in yearList)
+                        {
+                            String line = year;
+
+                            foreach (String projectNumber in projectNumberList[year])
+                            {
+                                line += " " + projectNumber;
+                            }
+
+                            file.WriteLine(line);
+
+                        }
+                    }
+
+                    File.SetAttributes(path + "\\" + projectname_file, FileAttributes.Hidden);
+                }
+                else if (File.Exists(path + "\\" + projectname_file))
+                {
+                    yearList = new List<string>();
+                    projectNumberList = new SortedDictionary<string, List<string>>();
+
+                    StreamReader file = new StreamReader(path + "\\" + projectname_file);
+                    int counter = 0;
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        List<String> datas = new List<string>(line.Split(' '));
+
+                        String year = datas[0];
+
+                        yearList.Add(year);
+                        datas.Remove(year);
+
+                        projectNumberList[year] = datas;
+                    }
+                    file.Close();
+                }
+                else
+                {
+                    throw new Exception("A szerver és a projektszámokat tartalmazó fájl nem elérhető!");
+                }
+
             }
             catch (Exception exeption)
             {
-                MessageBox.Show(exeption.ToString(), "Sikertelen data_file olvasás.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(exeption.ToString(), "Sikertelen adat olvasás.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
 
@@ -240,7 +341,7 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        public void saveMailItem(string project)
+        public void saveMailItem(string year, string projectnumber)
         {
             string[] dirs = { "" };
 
@@ -256,7 +357,7 @@ namespace NitrotervOutlookAddIn
                     //Note: 
                     // .../dir1/asdproject and .../dir1/project are also found!!
 
-                    mailItem.SaveAs(nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)));
+                    mailItem.SaveAs(nameBuilder(year, projectnumber, mailItem.Subject, dateBuilder(mailItem.SentOn), dateBuilder(DateTime.Now)));
                     //mailItem.SaveAs(dirs[0] + "\\" + nameBuilder(project, mailItem.Subject) + ".msg");
                     //mailItem.Categories = "Iktatva";
                     try
@@ -286,7 +387,7 @@ namespace NitrotervOutlookAddIn
                         di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
                     }
 
-                    mailItem.SaveAs(nameBuilder(project, mailItem.Subject, dateBuilder(mailItem.SentOn)));
+                    mailItem.SaveAs(nameBuilder(year, projectnumber, mailItem.Subject, dateBuilder(mailItem.SentOn), dateBuilder(DateTime.Now)));
                     mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
 
                     MessageBox.Show("Sikertelen hálózati mentés", "Sikertelen iktatásra küldés!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -312,7 +413,7 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        private string nameBuilder(string project, string subject, string date)
+        private string nameBuilder(string year, string projectnumber, string subject, string sent_date, string date)
         {
             try
             {
@@ -321,14 +422,26 @@ namespace NitrotervOutlookAddIn
                 if (subject != null)
                 {
                     subject = Regex.Replace(subject, @"\s+", "_");
-                    subject = Regex.Replace(subject, "[^\\w\\d]", "");
+                    subject = Regex.Replace(subject, "[^\\w\\d]", "_");
                 }
                 else
                 {
                     subject = "";
                 }
 
-                string name = "[" + project + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+
+                string name;
+                
+                if (projectnumber != null || projectnumber != "")
+                {
+                    name = "[" + year + "]" + "[" + projectnumber + "]";
+                }
+                else
+                {
+                    name = "[" + year + "]";
+                }
+                
+                name +=  "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
 
                 string path;
                 if (System.IO.Directory.Exists(network_path))
@@ -347,7 +460,17 @@ namespace NitrotervOutlookAddIn
                 while (File.Exists(path))
                 {
                     counter++;
-                    name = "[" + project + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+
+                    if (projectnumber != null || projectnumber != "")
+                    {
+                        name = "[" + year + "]" + "[" + projectnumber + "]";
+                    }
+                    else
+                    {
+                        name = "[" + year + "]";
+                    }
+
+                    name += "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
 
                     path = "";
 
@@ -377,26 +500,13 @@ namespace NitrotervOutlookAddIn
         {
             try
             {
-                return String.Format("{0:yyMMdd}", date);
+                return String.Format("{0:yyMMdd_hhmm}", date);
             }
             catch (Exception)
             {
                 throw;
             }
         }
-
-        /*private string pathBuilder(string project)
-        {
-            try
-            {
-                
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }*/
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {

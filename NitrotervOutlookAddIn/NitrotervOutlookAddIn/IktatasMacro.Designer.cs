@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Tools.Ribbon;
 using System.Windows.Forms;
@@ -42,10 +43,12 @@ namespace NitrotervOutlookAddIn
             Microsoft.Office.Tools.Ribbon.RibbonDialogLauncher ribbonDialogLauncherImpl1 = this.Factory.CreateRibbonDialogLauncher();
             this.iktatasTab = this.Factory.CreateRibbonTab();
             this.iktatasGroup = this.Factory.CreateRibbonGroup();
+            this.yearDropDown = this.Factory.CreateRibbonDropDown();
             this.projektekDropDown = this.Factory.CreateRibbonDropDown();
-            this.localCheckButton = this.Factory.CreateRibbonButton();
             this.separator1 = this.Factory.CreateRibbonSeparator();
             this.iktatasButton = this.Factory.CreateRibbonButton();
+            this.separator2 = this.Factory.CreateRibbonSeparator();
+            this.localCheckButton = this.Factory.CreateRibbonButton();
             this.networkFolderButton = this.Factory.CreateRibbonButton();
             this.iktatasTab.SuspendLayout();
             this.iktatasGroup.SuspendLayout();
@@ -61,25 +64,26 @@ namespace NitrotervOutlookAddIn
             // iktatasGroup
             // 
             this.iktatasGroup.DialogLauncher = ribbonDialogLauncherImpl1;
+            this.iktatasGroup.Items.Add(this.yearDropDown);
             this.iktatasGroup.Items.Add(this.projektekDropDown);
-            this.iktatasGroup.Items.Add(this.localCheckButton);
-            this.iktatasGroup.Items.Add(this.networkFolderButton);
             this.iktatasGroup.Items.Add(this.separator1);
             this.iktatasGroup.Items.Add(this.iktatasButton);
+            this.iktatasGroup.Items.Add(this.separator2);
+            this.iktatasGroup.Items.Add(this.localCheckButton);
+            this.iktatasGroup.Items.Add(this.networkFolderButton);
             this.iktatasGroup.Label = "Iktatás";
             this.iktatasGroup.Name = "iktatasGroup";
             // 
+            // yearDropDown
+            // 
+            this.yearDropDown.Label = "Év               ";
+            this.yearDropDown.Name = "yearDropDown";
+            this.yearDropDown.SelectionChanged += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.yearDropDown_SelectionChanged);
+            // 
             // projektekDropDown
             // 
-            this.projektekDropDown.Label = "Projektek";
+            this.projektekDropDown.Label = "Projektszám";
             this.projektekDropDown.Name = "projektekDropDown";
-            // 
-            // localCheckButton
-            // 
-            this.localCheckButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
-            this.localCheckButton.Label = "Lokális Mappa Ellenőrzése";
-            this.localCheckButton.Name = "localCheckButton";
-            this.localCheckButton.ShowImage = true;
             // 
             // separator1
             // 
@@ -92,6 +96,17 @@ namespace NitrotervOutlookAddIn
             this.iktatasButton.Label = "Küldés iktatásra";
             this.iktatasButton.Name = "iktatasButton";
             this.iktatasButton.ShowImage = true;
+            // 
+            // separator2
+            // 
+            this.separator2.Name = "separator2";
+            // 
+            // localCheckButton
+            // 
+            this.localCheckButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
+            this.localCheckButton.Label = "Lokális Mappa Ellenőrzése";
+            this.localCheckButton.Name = "localCheckButton";
+            this.localCheckButton.ShowImage = true;
             // 
             // networkFolderButton
             // 
@@ -120,7 +135,6 @@ namespace NitrotervOutlookAddIn
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup iktatasGroup;
         internal Microsoft.Office.Tools.Ribbon.RibbonDropDown projektekDropDown;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton iktatasButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonSeparator separator1;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton localCheckButton;
 
         private void iktatasButton_Click(object sender, RibbonControlEventArgs e)
@@ -128,7 +142,8 @@ namespace NitrotervOutlookAddIn
             try
             {
                 string selectedProject = projektekDropDown.SelectedItem.Label;
-                Globals.ThisAddIn.saveMailItem(selectedProject);
+                string selectedYear = yearDropDown.SelectedItem.Label;
+                Globals.ThisAddIn.saveMailItem(selectedYear, selectedProject);
 
             }
             catch (System.Exception ex)
@@ -166,7 +181,21 @@ namespace NitrotervOutlookAddIn
             iktatas_dialog.Show();
         }
 
+        private void yearDropDown_SelectionChanged(object sender, RibbonControlEventArgs e)
+        {
+            projektekDropDown.Items.Clear();
+            foreach (String projectNumber in Globals.ThisAddIn.projectNumberList[yearDropDown.SelectedItem.Label])
+            {
+                RibbonDropDownItem item = Globals.Factory.GetRibbonFactory().CreateRibbonDropDownItem();
+                item.Label = projectNumber;
+                projektekDropDown.Items.Add(item);
+            }
+        }
+
         internal RibbonButton networkFolderButton;
+        internal RibbonSeparator separator1;
+        internal RibbonSeparator separator2;
+        internal RibbonDropDown yearDropDown;
     }
 
     partial class ThisRibbonCollection

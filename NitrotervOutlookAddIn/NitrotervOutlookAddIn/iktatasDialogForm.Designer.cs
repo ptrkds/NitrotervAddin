@@ -39,9 +39,9 @@ namespace NitrotervOutlookAddIn
             this.localPathTextBox = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
-            this.projectFileTextBox = new System.Windows.Forms.TextBox();
-            this.projectFileLabel = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.projectDirTextBox = new System.Windows.Forms.TextBox();
+            this.projectDirLabel = new System.Windows.Forms.Label();
+            this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // saveButton
@@ -78,9 +78,9 @@ namespace NitrotervOutlookAddIn
             this.networkPathLabel.AutoSize = true;
             this.networkPathLabel.Location = new System.Drawing.Point(13, 72);
             this.networkPathLabel.Name = "networkPathLabel";
-            this.networkPathLabel.Size = new System.Drawing.Size(108, 13);
+            this.networkPathLabel.Size = new System.Drawing.Size(155, 13);
             this.networkPathLabel.TabIndex = 3;
-            this.networkPathLabel.Text = "Hálózati mappa helye";
+            this.networkPathLabel.Text = "Hálózati \'iktatásra\' mappa helye";
             // 
             // backButton
             // 
@@ -94,51 +94,47 @@ namespace NitrotervOutlookAddIn
             // 
             // networkPathTextBox
             // 
-            this.networkPathTextBox.Location = new System.Drawing.Point(139, 69);
+            this.networkPathTextBox.Location = new System.Drawing.Point(174, 69);
             this.networkPathTextBox.Name = "networkPathTextBox";
             this.networkPathTextBox.ReadOnly = true;
-            this.networkPathTextBox.Size = new System.Drawing.Size(175, 20);
+            this.networkPathTextBox.Size = new System.Drawing.Size(140, 20);
             this.networkPathTextBox.TabIndex = 5;
             this.networkPathTextBox.Click += new System.EventHandler(this.networkPathTextBox_Click);
             // 
             // localPathTextBox
             // 
-            this.localPathTextBox.Location = new System.Drawing.Point(139, 25);
+            this.localPathTextBox.Location = new System.Drawing.Point(174, 25);
             this.localPathTextBox.Name = "localPathTextBox";
             this.localPathTextBox.ReadOnly = true;
-            this.localPathTextBox.Size = new System.Drawing.Size(175, 20);
+            this.localPathTextBox.Size = new System.Drawing.Size(140, 20);
             this.localPathTextBox.TabIndex = 4;
             this.localPathTextBox.Click += new System.EventHandler(this.localPathTextBox_Click);
             // 
-            // projectFileTextBox
+            // projectDirTextBox
             // 
-            this.projectFileTextBox.Location = new System.Drawing.Point(139, 115);
-            this.projectFileTextBox.Name = "projectFileTextBox";
-            this.projectFileTextBox.ReadOnly = true;
-            this.projectFileTextBox.Size = new System.Drawing.Size(175, 20);
-            this.projectFileTextBox.TabIndex = 8;
-            this.projectFileTextBox.Click += new System.EventHandler(this.projectFileTextBox_Click);
+            this.projectDirTextBox.Location = new System.Drawing.Point(174, 115);
+            this.projectDirTextBox.Name = "projectDirTextBox";
+            this.projectDirTextBox.ReadOnly = true;
+            this.projectDirTextBox.Size = new System.Drawing.Size(140, 20);
+            this.projectDirTextBox.TabIndex = 8;
+            this.projectDirTextBox.Click += new System.EventHandler(this.projectDirTextBox_Click);
             // 
-            // projectFileLabel
+            // projectDirLabel
             // 
-            this.projectFileLabel.AutoSize = true;
-            this.projectFileLabel.Location = new System.Drawing.Point(13, 118);
-            this.projectFileLabel.Name = "projectFileLabel";
-            this.projectFileLabel.Size = new System.Drawing.Size(120, 13);
-            this.projectFileLabel.TabIndex = 7;
-            this.projectFileLabel.Text = "Projekt nyilvántartási fájl";
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.projectDirLabel.AutoSize = true;
+            this.projectDirLabel.Location = new System.Drawing.Point(13, 118);
+            this.projectDirLabel.Name = "projectDirLabel";
+            this.projectDirLabel.Size = new System.Drawing.Size(155, 13);
+            this.projectDirLabel.TabIndex = 7;
+            this.projectDirLabel.Text = "Hálózati projektek mappa helye";
             // 
             // iktatasDialogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(333, 195);
-            this.Controls.Add(this.projectFileTextBox);
-            this.Controls.Add(this.projectFileLabel);
+            this.Controls.Add(this.projectDirTextBox);
+            this.Controls.Add(this.projectDirLabel);
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.networkPathTextBox);
             this.Controls.Add(this.localPathTextBox);
@@ -165,8 +161,8 @@ namespace NitrotervOutlookAddIn
         private System.Windows.Forms.TextBox localPathTextBox;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
-        private System.Windows.Forms.TextBox projectFileTextBox;
-        private System.Windows.Forms.Label projectFileLabel;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox projectDirTextBox;
+        private System.Windows.Forms.Label projectDirLabel;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog3;
     }
 }
