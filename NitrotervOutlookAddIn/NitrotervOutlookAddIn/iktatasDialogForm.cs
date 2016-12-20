@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.Outlook;
 
 namespace NitrotervOutlookAddIn
 {
@@ -14,7 +15,7 @@ namespace NitrotervOutlookAddIn
     {
         string local_path;
         string network_path;
-        string project_file;
+        string server_path;
         public iktatasDialogForm()
         {
             InitializeComponent();
@@ -24,10 +25,10 @@ namespace NitrotervOutlookAddIn
         {
             local_path = Globals.ThisAddIn.getLocalPath();
             network_path = Globals.ThisAddIn.getNetworkPath();
-            project_file = Globals.ThisAddIn.getProjectnameFile();
+            server_path = Globals.ThisAddIn.getServerPath();
             localPathTextBox.Text = local_path;
             networkPathTextBox.Text = network_path;
-            projectFileTextBox.Text = project_file;
+            projectDirTextBox.Text = server_path;
         }
 
         private void backButton_Click(object sender, EventArgs e)
@@ -39,11 +40,11 @@ namespace NitrotervOutlookAddIn
         {
             local_path = Globals.ThisAddIn.getDefaultLocalPath();
             network_path = Globals.ThisAddIn.getDefaultNetworkPath();
-            project_file = Globals.ThisAddIn.getDefaultProjectnameFile();
+            server_path = Globals.ThisAddIn.getDefaultServerPath();
 
             localPathTextBox.Text = local_path;
             networkPathTextBox.Text = network_path;
-            projectFileTextBox.Text = project_file;
+            projectDirTextBox.Text = server_path;
 
         }
 
@@ -51,7 +52,7 @@ namespace NitrotervOutlookAddIn
         {
             Globals.ThisAddIn.setLocalPath(local_path);
             Globals.ThisAddIn.setNetworkPath(network_path);
-            Globals.ThisAddIn.setProjectnameFile(project_file);
+            Globals.ThisAddIn.setPath(server_path);
 
             Globals.ThisAddIn.dataFileFunction();
 
@@ -78,15 +79,12 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        private void projectFileTextBox_Click(object sender, EventArgs e)
+        private void projectDirTextBox_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (folderBrowserDialog3.ShowDialog() == DialogResult.OK)
             {
-
-                this.projectFileTextBox.Text = openFileDialog1.FileName;
-                project_file = this.projectFileTextBox.Text;
+                this.projectDirTextBox.Text = folderBrowserDialog3.SelectedPath;
+                server_path = this.projectDirTextBox.Text;
             }
         }
     }

@@ -12,8 +12,38 @@ namespace NitrotervOutlookAddIn
     {
         public void loadProjectFile()
         {
+            //TODO projektfajlok
             projektekDropDown.Items.Clear();
+            yearDropDown.Items.Clear();
 
+            try
+            {
+
+                foreach (string year in Globals.ThisAddIn.yearList)
+                {
+
+                    RibbonDropDownItem item = Globals.Factory.GetRibbonFactory().CreateRibbonDropDownItem();
+                    item.Label = year;
+                    yearDropDown.Items.Add(item);
+                }
+
+                if (yearDropDown.Items[0].Label != null || yearDropDown.Items[0].Label != "")
+                {
+                    foreach (String projectNumber in Globals.ThisAddIn.projectNumberList[yearDropDown.Items[0].Label])
+                    {
+                        RibbonDropDownItem item = Globals.Factory.GetRibbonFactory().CreateRibbonDropDownItem();
+                        item.Label = projectNumber;
+                        projektekDropDown.Items.Add(item);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Hiba az adatok a menük feltöltése során!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
+            /*
             //combobox from file
             int counter = 0;
             string line;
@@ -34,7 +64,7 @@ namespace NitrotervOutlookAddIn
             catch (Exception ex)
             {
                 MessageBox.Show("Nem létezik a projektnyilvántartási file.", "File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            }*/
         }
 
         private void IktatasMacro_Load(object sender, RibbonUIEventArgs e)
@@ -49,7 +79,7 @@ namespace NitrotervOutlookAddIn
             this.localCheckButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.localCheckButton_Click);
             this.iktatasGroup.DialogLauncherClick += new RibbonControlEventHandler(this.iktatasGroup_DialogLauncherClick);
             this.networkFolderButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.networkFolderButton_Click);
-
+            this.yearDropDown.SelectionChanged += new RibbonControlEventHandler(this.yearDropDown_SelectionChanged);
         }
 
 
