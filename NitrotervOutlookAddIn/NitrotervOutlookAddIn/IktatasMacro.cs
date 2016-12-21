@@ -12,7 +12,6 @@ namespace NitrotervOutlookAddIn
     {
         public void loadProjectFile()
         {
-            //TODO projektfajlok
             projektekDropDown.Items.Clear();
             yearDropDown.Items.Clear();
 
