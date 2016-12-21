@@ -341,7 +341,7 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        public void saveMailItem(string year, string projectnumber)
+        public void saveMailItem(string projectnumber)
         {
             string[] dirs = { "" };
 
@@ -357,7 +357,7 @@ namespace NitrotervOutlookAddIn
                     //Note: 
                     // .../dir1/asdproject and .../dir1/project are also found!!
 
-                    mailItem.SaveAs(nameBuilder(year, projectnumber, mailItem.Subject, dateBuilder(mailItem.SentOn), dateBuilder(DateTime.Now)));
+                    mailItem.SaveAs(nameBuilder(projectnumber, mailItem.Subject, dateBuilder(mailItem.SentOn), dateBuilder(DateTime.Now)));
                     //mailItem.SaveAs(dirs[0] + "\\" + nameBuilder(project, mailItem.Subject) + ".msg");
                     //mailItem.Categories = "Iktatva";
                     try
@@ -387,7 +387,7 @@ namespace NitrotervOutlookAddIn
                         di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
                     }
 
-                    mailItem.SaveAs(nameBuilder(year, projectnumber, mailItem.Subject, dateBuilder(mailItem.SentOn), dateBuilder(DateTime.Now)));
+                    mailItem.SaveAs(nameBuilder(projectnumber, mailItem.Subject, dateBuilder(mailItem.SentOn), dateBuilder(DateTime.Now)));
                     mailItem.MarkAsTask(Outlook.OlMarkInterval.olMarkNoDate);
 
                     MessageBox.Show("Sikertelen hálózati mentés", "Sikertelen iktatásra küldés!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -413,7 +413,7 @@ namespace NitrotervOutlookAddIn
             }
         }
 
-        private string nameBuilder(string year, string projectnumber, string subject, string sent_date, string date)
+        private string nameBuilder(string projectnumber, string subject, string sent_date, string date)
         {
             try
             {
@@ -429,19 +429,8 @@ namespace NitrotervOutlookAddIn
                     subject = "";
                 }
 
-
-                string name;
                 
-                if (projectnumber != null || projectnumber != "")
-                {
-                    name = "[" + year + "]" + "[" + projectnumber + "]";
-                }
-                else
-                {
-                    name = "[" + year + "]";
-                }
-                
-                name +=  "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+                string name = "[" + projectnumber + "]" + "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
 
                 string path;
                 if (System.IO.Directory.Exists(network_path))
@@ -460,17 +449,8 @@ namespace NitrotervOutlookAddIn
                 while (File.Exists(path))
                 {
                     counter++;
-
-                    if (projectnumber != null || projectnumber != "")
-                    {
-                        name = "[" + year + "]" + "[" + projectnumber + "]";
-                    }
-                    else
-                    {
-                        name = "[" + year + "]";
-                    }
-
-                    name += "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+                    
+                    name += "[" + projectnumber + "]" + "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
 
                     path = "";
 
@@ -500,7 +480,7 @@ namespace NitrotervOutlookAddIn
         {
             try
             {
-                return String.Format("{0:yyMMdd_hhmm}", date);
+                return String.Format("{0:yyMMdd}", date);
             }
             catch (Exception)
             {

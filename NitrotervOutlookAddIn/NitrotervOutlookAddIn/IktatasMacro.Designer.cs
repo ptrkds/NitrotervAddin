@@ -141,9 +141,18 @@ namespace NitrotervOutlookAddIn
         {
             try
             {
-                string selectedProject = projektekDropDown.SelectedItem.Label;
-                string selectedYear = yearDropDown.SelectedItem.Label;
-                Globals.ThisAddIn.saveMailItem(selectedYear, selectedProject);
+                string selectedProject;
+
+                if (projektekDropDown.SelectedItem != null)
+                {
+                    selectedProject = projektekDropDown.SelectedItem.Label;
+                }
+                else
+                {
+                    selectedProject = yearDropDown.SelectedItem.Label;
+                }
+
+                Globals.ThisAddIn.saveMailItem(selectedProject);
 
             }
             catch (System.Exception ex)
