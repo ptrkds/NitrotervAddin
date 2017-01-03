@@ -142,6 +142,8 @@ namespace NitrotervOutlookAddIn
             this.Controls.Add(this.localPathLabel);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.saveButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "iktatasDialogForm";
             this.ShowIcon = false;
             this.Text = "Beállítások";

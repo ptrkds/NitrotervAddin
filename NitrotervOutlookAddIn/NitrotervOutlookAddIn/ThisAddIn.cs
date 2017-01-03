@@ -114,6 +114,90 @@ namespace NitrotervOutlookAddIn
             File.SetAttributes(path + "\\" + data_file, FileAttributes.Hidden);
         }
 
+        public void loadFolderNames()
+        {
+            if (Directory.Exists(server_path))
+            {
+                yearList = new List<string>();
+                projectNumberList = new SortedDictionary<string, List<string>>();
+
+                List<String> folders = new List<string>(Directory.GetDirectories(server_path).Select(d => new DirectoryInfo(d).Name));
+
+                for (int i = 0; i < folders.Count; i++)
+                {
+                    if (folders[i].Substring(0, 2) == "20")
+                    {
+                        yearList.Add(folders[i]);
+                    }
+                }
+
+                foreach (string year in yearList)
+                {
+                    List<String> projectNumbers = new List<String>(Directory.GetDirectories(server_path + "\\" + year).Select(d => new DirectoryInfo(d).Name));                    
+
+                    for (int i = 0; i < projectNumbers.Count; i++)
+                    {
+                        projectNumbers[i] = projectNumbers[i].Substring(0, 5);
+                    }
+
+                    projectNumberList[year] = projectNumbers;
+                }
+
+                //kiiras fajlba
+                if (File.Exists(path + "\\" + projectname_file))
+                {
+                    File.Delete(path + "\\" + projectname_file);
+                }
+
+                FileStream fs = new FileStream(path + "\\" + projectname_file, FileMode.Create);
+
+                fs.Close();
+
+                using (StreamWriter file = new StreamWriter(path + "\\" + projectname_file))
+                {
+                    foreach (string year in yearList)
+                    {
+                        String line = year;
+
+                        foreach (String projectNumber in projectNumberList[year])
+                        {
+                            line += " " + projectNumber;
+                        }
+
+                        file.WriteLine(line);
+
+                    }
+                }
+
+                File.SetAttributes(path + "\\" + projectname_file, FileAttributes.Hidden);
+            }
+            else if (File.Exists(path + "\\" + projectname_file))
+            {
+                yearList = new List<string>();
+                projectNumberList = new SortedDictionary<string, List<string>>();
+
+                StreamReader file = new StreamReader(path + "\\" + projectname_file);
+                int counter = 0;
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    List<String> datas = new List<string>(line.Split(' '));
+
+                    String year = datas[0];
+
+                    yearList.Add(year);
+                    datas.Remove(year);
+
+                    projectNumberList[year] = datas;
+                }
+                file.Close();
+            }
+            else
+            {
+                throw new Exception("A szerver és a projektszámokat tartalmazó fájl nem elérhető!");
+            }
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             currentExplorer = this.Application.ActiveExplorer();
@@ -162,79 +246,7 @@ namespace NitrotervOutlookAddIn
                 }
 
 
-                if (Directory.Exists(server_path))
-                {
-                    yearList = new List<string>();
-                    projectNumberList = new SortedDictionary<string, List<string>>();
-
-                    yearList = new List<string>(Directory.GetDirectories(server_path).Select(d => new DirectoryInfo(d).Name));
-
-                    foreach (string year in yearList)
-                    {
-
-                        List<String> projectNumbers = new List<String>(  Directory.GetDirectories(server_path + "\\" + year).Select(d => new DirectoryInfo(d).Name));
-
-                        for (int i=0; i<projectNumbers.Count; i++)
-                        {
-                            projectNumbers[i] = projectNumbers[i].Substring(0, 5);
-                        }
-
-                        projectNumberList[year] = projectNumbers;
-                    }
-
-                    //kiiras fajlba
-                    if (File.Exists(path + "\\" + projectname_file))
-                    {
-                        File.Delete(path + "\\" + projectname_file);
-                    }
-
-                    FileStream fs = new FileStream(path + "\\" + projectname_file, FileMode.Create);
-
-                    fs.Close();
-
-                    using (StreamWriter file = new StreamWriter(path + "\\" + projectname_file))
-                    {
-                        foreach (string year in yearList)
-                        {
-                            String line = year;
-
-                            foreach (String projectNumber in projectNumberList[year])
-                            {
-                                line += " " + projectNumber;
-                            }
-
-                            file.WriteLine(line);
-
-                        }
-                    }
-
-                    File.SetAttributes(path + "\\" + projectname_file, FileAttributes.Hidden);
-                }
-                else if (File.Exists(path + "\\" + projectname_file))
-                {
-                    yearList = new List<string>();
-                    projectNumberList = new SortedDictionary<string, List<string>>();
-
-                    StreamReader file = new StreamReader(path + "\\" + projectname_file);
-                    int counter = 0;
-                    string line;
-                    while ((line = file.ReadLine()) != null)
-                    {
-                        List<String> datas = new List<string>(line.Split(' '));
-
-                        String year = datas[0];
-
-                        yearList.Add(year);
-                        datas.Remove(year);
-
-                        projectNumberList[year] = datas;
-                    }
-                    file.Close();
-                }
-                else
-                {
-                    throw new Exception("A szerver és a projektszámokat tartalmazó fájl nem elérhető!");
-                }
+                loadFolderNames();
 
             }
             catch (Exception exeption)
@@ -393,6 +405,9 @@ namespace NitrotervOutlookAddIn
                     MessageBox.Show("Sikertelen hálózati mentés", "Sikertelen iktatásra küldés!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     MessageBox.Show("Sikeres lokális mentés", "Sikeresen elküldve iktatásra!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+
+                (mailItem as Microsoft.Office.Interop.Outlook._MailItem).Close(Microsoft.Office.Interop.Outlook.OlInspectorClose.olSave);
+
             }
             catch (UnauthorizedAccessException ex)
             {
