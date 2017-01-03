@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Tools.Ribbon;
 using System.Windows.Forms;
@@ -50,6 +52,8 @@ namespace NitrotervOutlookAddIn
             this.separator2 = this.Factory.CreateRibbonSeparator();
             this.localCheckButton = this.Factory.CreateRibbonButton();
             this.networkFolderButton = this.Factory.CreateRibbonButton();
+            this.checkFoldersButton = this.Factory.CreateRibbonButton();
+            this.newFolderButton = this.Factory.CreateRibbonButton();
             this.iktatasTab.SuspendLayout();
             this.iktatasGroup.SuspendLayout();
             this.SuspendLayout();
@@ -66,11 +70,13 @@ namespace NitrotervOutlookAddIn
             this.iktatasGroup.DialogLauncher = ribbonDialogLauncherImpl1;
             this.iktatasGroup.Items.Add(this.yearDropDown);
             this.iktatasGroup.Items.Add(this.projektekDropDown);
+            this.iktatasGroup.Items.Add(this.newFolderButton);
             this.iktatasGroup.Items.Add(this.separator1);
             this.iktatasGroup.Items.Add(this.iktatasButton);
             this.iktatasGroup.Items.Add(this.separator2);
             this.iktatasGroup.Items.Add(this.localCheckButton);
             this.iktatasGroup.Items.Add(this.networkFolderButton);
+            this.iktatasGroup.Items.Add(this.checkFoldersButton);
             this.iktatasGroup.Label = "Iktatás";
             this.iktatasGroup.Name = "iktatasGroup";
             // 
@@ -114,6 +120,20 @@ namespace NitrotervOutlookAddIn
             this.networkFolderButton.Label = "Hálózati Mappa Megnyitása";
             this.networkFolderButton.Name = "networkFolderButton";
             this.networkFolderButton.ShowImage = true;
+            // 
+            // checkFoldersButton
+            // 
+            this.checkFoldersButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
+            this.checkFoldersButton.Label = "Hálózati mappák ellenőrzése";
+            this.checkFoldersButton.Name = "checkFoldersButton";
+            this.checkFoldersButton.ShowImage = true;
+            // 
+            // newFolderButton
+            // 
+            this.newFolderButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.folder_check;
+            this.newFolderButton.Label = "Új mappa létrehozása";
+            this.newFolderButton.Name = "newFolderButton";
+            this.newFolderButton.ShowImage = true;
             // 
             // IktatasMacro
             // 
@@ -201,10 +221,32 @@ namespace NitrotervOutlookAddIn
             }
         }
 
+        private void checkFoldersButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            Globals.ThisAddIn.loadFolderNames();
+            Globals.Ribbons.IktatasMacro.loadProjectFile();
+        }
+
+        private void newFolderButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            newFolderForm newFolderForm = new newFolderForm(yearDropDown.SelectedItem.Label);
+
+            newFolderForm.ShowDialog();
+
+            if (newFolderForm.DialogResult == DialogResult.OK)
+            {
+                Globals.ThisAddIn.loadFolderNames();
+                Globals.Ribbons.IktatasMacro.loadProjectFile();
+            }
+
+        }
+
         internal RibbonButton networkFolderButton;
         internal RibbonSeparator separator1;
         internal RibbonSeparator separator2;
         internal RibbonDropDown yearDropDown;
+        internal RibbonButton checkFoldersButton;
+        internal RibbonButton newFolderButton;
     }
 
     partial class ThisRibbonCollection

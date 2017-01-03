@@ -79,6 +79,8 @@ namespace NitrotervOutlookAddIn
             this.iktatasGroup.DialogLauncherClick += new RibbonControlEventHandler(this.iktatasGroup_DialogLauncherClick);
             this.networkFolderButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.networkFolderButton_Click);
             this.yearDropDown.SelectionChanged += new RibbonControlEventHandler(this.yearDropDown_SelectionChanged);
+            this.checkFoldersButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.checkFoldersButton_Click);
+            this.newFolderButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.newFolderButton_Click);
         }
 
 
