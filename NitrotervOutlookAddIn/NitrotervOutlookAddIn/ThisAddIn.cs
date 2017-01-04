@@ -21,9 +21,9 @@ namespace NitrotervOutlookAddIn
         public static string data_file = @"path.ini";
         public static string projectname_file = "projektszamok.ini";
 
-        static string default_network_path = "D:\\";
+        static string default_network_path = "\\\\Nitroterv02server\\Iktatásra váró levelek";
         static string default_local_path = "D:\\local_puffer";
-        static string default_server_path = "\\\\Nitroterv02server\\Tervezési projektek\\";
+        static string default_server_path = "\\\\Nitroterv02server\\Tervezesi projektek\\";
 
 
         public static string network_path = default_network_path;
