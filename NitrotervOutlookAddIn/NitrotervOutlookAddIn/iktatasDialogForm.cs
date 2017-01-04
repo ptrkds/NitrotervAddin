@@ -52,9 +52,10 @@ namespace NitrotervOutlookAddIn
         {
             Globals.ThisAddIn.setLocalPath(local_path);
             Globals.ThisAddIn.setNetworkPath(network_path);
-            Globals.ThisAddIn.setPath(server_path);
+            Globals.ThisAddIn.setServerPath(server_path);
 
             Globals.ThisAddIn.dataFileFunction();
+            Globals.ThisAddIn.loadFolderNames();
 
             Globals.Ribbons.IktatasMacro.loadProjectFile();
 
