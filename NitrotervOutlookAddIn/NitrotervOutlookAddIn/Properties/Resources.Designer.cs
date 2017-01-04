@@ -63,6 +63,16 @@ namespace NitrotervOutlookAddIn.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap download {
+            get {
+                object obj = ResourceManager.GetObject("download", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap file_save {
             get {
                 object obj = ResourceManager.GetObject("file_save", resourceCulture);
@@ -76,6 +86,16 @@ namespace NitrotervOutlookAddIn.Properties {
         internal static System.Drawing.Bitmap folder_check {
             get {
                 object obj = ResourceManager.GetObject("folder_check", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap refresh_512 {
+            get {
+                object obj = ResourceManager.GetObject("refresh-512", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
