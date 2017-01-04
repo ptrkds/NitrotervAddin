@@ -21,9 +21,9 @@ namespace NitrotervOutlookAddIn
         public static string data_file = @"path.ini";
         public static string projectname_file = "projektszamok.ini";
 
-        static string default_network_path = "D:\\Nitroterv02server\\Iktatásra";
-        static string default_local_path = "local_puffer";
-        static string default_server_path = "D:\\Nitroterv02server\\Tervezesi projektek\\";
+        static string default_network_path = "D:\\";
+        static string default_local_path = "D:\\local_puffer";
+        static string default_server_path = "\\\\Nitroterv02server\\Tervezési projektek\\";
 
 
         public static string network_path = default_network_path;
@@ -198,6 +198,40 @@ namespace NitrotervOutlookAddIn
             }
         }
 
+        public void writeConfigFile()
+        {
+            //create datafile ini
+            if (!File.Exists(path + "\\" + data_file))
+            {
+                FileStream fs = new FileStream(path + "\\" + data_file, FileMode.Create);
+
+                fs.Close();
+
+                string[] lines = { network_path, local_path, server_path };
+
+                using (StreamWriter file = new StreamWriter(path + "\\" + data_file))
+                {
+                    foreach (string line in lines)
+                    {
+
+                        file.WriteLine(line);
+
+                    }
+                }
+
+                File.SetAttributes(path + "\\" + data_file, FileAttributes.Hidden);
+
+            }
+            else
+            {
+                string[] lines = new string[3];
+                lines = File.ReadAllLines(path + "\\" + data_file);
+                network_path = lines[0];
+                local_path = lines[1];
+                server_path = lines[2];
+            }
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             currentExplorer = this.Application.ActiveExplorer();
@@ -214,44 +248,15 @@ namespace NitrotervOutlookAddIn
                     di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
                 }
 
-                //create datafile ini
-                if (!File.Exists(path + "\\" + data_file))
-                {
-                    FileStream fs = new FileStream(path + "\\" + data_file, FileMode.Create);
 
-                    fs.Close();
-
-                    string[] lines = { network_path, local_path, server_path };
-
-                    using (StreamWriter file = new StreamWriter(path + "\\" + data_file))
-                    {
-                        foreach (string line in lines)
-                        {
-
-                            file.WriteLine(line);
-                            
-                        }
-                    }
-
-                    File.SetAttributes(path + "\\" + data_file, FileAttributes.Hidden);
-
-                }
-                else
-                {
-                    string[] lines = new string[3];
-                    lines = File.ReadAllLines(path + "\\" + data_file);
-                    network_path = lines[0];
-                    local_path = lines[1];
-                    server_path = lines[2];
-                }
-
+                writeConfigFile();
 
                 loadFolderNames();
 
             }
             catch (Exception exeption)
             {
-                MessageBox.Show(exeption.ToString(), "Sikertelen adat olvasás.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Hiba az adatok olvasása során, kérem ellenőrizze a megadott mappákat.", "Sikertelen adat olvasás.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
 
@@ -412,12 +417,12 @@ namespace NitrotervOutlookAddIn
             catch (UnauthorizedAccessException ex)
             {
                 //
-                MessageBox.Show("UnauthorizedAccessException\n" + ex.ToString(), "Sikertelen iktatásra küldés!\n", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("UnauthorizedAccessException\n", "Sikertelen iktatásra küldés!\n", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (DirectoryNotFoundException ex)
             {
                 //
-                MessageBox.Show("DirectoryNotFoundException\n" + ex.ToString(), "Sikertelen iktatásra küldés!\n", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("DirectoryNotFoundException\n", "Sikertelen iktatásra küldés!\n", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
             catch (Exception ex)
