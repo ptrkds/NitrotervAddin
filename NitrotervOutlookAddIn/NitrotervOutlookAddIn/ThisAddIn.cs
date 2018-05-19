@@ -16,13 +16,13 @@ namespace NitrotervOutlookAddIn
         private Outlook.Explorer currentExplorer = null;
         Outlook.MailItem mailItem;
 
-        public static string path = @"D:\\NitrotervOutlook";
+        public static string path = @"C:\\NitrotervOutlook";
 
         public static string data_file = @"path.ini";
         public static string projectname_file = "projektszamok.ini";
 
         static string default_network_path = "\\\\Nitroterv02server\\Iktatásra váró levelek";
-        static string default_local_path = "D:\\local_puffer";
+        static string default_local_path = "C:\\local_puffer";
         static string default_server_path = "\\\\Nitroterv02server\\Tervezesi projektek\\";
 
 
