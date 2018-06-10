@@ -45,16 +45,16 @@ namespace NitrotervOutlookAddIn
             Microsoft.Office.Tools.Ribbon.RibbonDialogLauncher ribbonDialogLauncherImpl1 = this.Factory.CreateRibbonDialogLauncher();
             this.iktatasTab = this.Factory.CreateRibbonTab();
             this.iktatasGroup = this.Factory.CreateRibbonGroup();
+            this.iktatasButton = this.Factory.CreateRibbonButton();
+            this.separator3 = this.Factory.CreateRibbonSeparator();
             this.yearDropDown = this.Factory.CreateRibbonDropDown();
             this.projektekDropDown = this.Factory.CreateRibbonDropDown();
             this.separator1 = this.Factory.CreateRibbonSeparator();
-            this.separator2 = this.Factory.CreateRibbonSeparator();
             this.newFolderButton = this.Factory.CreateRibbonButton();
-            this.iktatasButton = this.Factory.CreateRibbonButton();
+            this.checkFoldersButton = this.Factory.CreateRibbonButton();
+            this.separator2 = this.Factory.CreateRibbonSeparator();
             this.localCheckButton = this.Factory.CreateRibbonButton();
             this.networkFolderButton = this.Factory.CreateRibbonButton();
-            this.checkFoldersButton = this.Factory.CreateRibbonButton();
-            this.separator3 = this.Factory.CreateRibbonSeparator();
             this.iktatasTab.SuspendLayout();
             this.iktatasGroup.SuspendLayout();
             this.SuspendLayout();
@@ -82,6 +82,18 @@ namespace NitrotervOutlookAddIn
             this.iktatasGroup.Label = "Iktatás";
             this.iktatasGroup.Name = "iktatasGroup";
             // 
+            // iktatasButton
+            // 
+            this.iktatasButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.iktatasButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.file_save;
+            this.iktatasButton.Label = "Küldés iktatásra";
+            this.iktatasButton.Name = "iktatasButton";
+            this.iktatasButton.ShowImage = true;
+            // 
+            // separator3
+            // 
+            this.separator3.Name = "separator3";
+            // 
             // yearDropDown
             // 
             this.yearDropDown.Label = "Év               ";
@@ -97,10 +109,6 @@ namespace NitrotervOutlookAddIn
             // 
             this.separator1.Name = "separator1";
             // 
-            // separator2
-            // 
-            this.separator2.Name = "separator2";
-            // 
             // newFolderButton
             // 
             this.newFolderButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.download;
@@ -108,13 +116,16 @@ namespace NitrotervOutlookAddIn
             this.newFolderButton.Name = "newFolderButton";
             this.newFolderButton.ShowImage = true;
             // 
-            // iktatasButton
+            // checkFoldersButton
             // 
-            this.iktatasButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.iktatasButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.file_save;
-            this.iktatasButton.Label = "Küldés iktatásra";
-            this.iktatasButton.Name = "iktatasButton";
-            this.iktatasButton.ShowImage = true;
+            this.checkFoldersButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.refresh_512;
+            this.checkFoldersButton.Label = "Frissítés";
+            this.checkFoldersButton.Name = "checkFoldersButton";
+            this.checkFoldersButton.ShowImage = true;
+            // 
+            // separator2
+            // 
+            this.separator2.Name = "separator2";
             // 
             // localCheckButton
             // 
@@ -129,17 +140,6 @@ namespace NitrotervOutlookAddIn
             this.networkFolderButton.Label = "Hálózati Mappa Megnyitása";
             this.networkFolderButton.Name = "networkFolderButton";
             this.networkFolderButton.ShowImage = true;
-            // 
-            // checkFoldersButton
-            // 
-            this.checkFoldersButton.Image = global::NitrotervOutlookAddIn.Properties.Resources.refresh_512;
-            this.checkFoldersButton.Label = "Frissítés";
-            this.checkFoldersButton.Name = "checkFoldersButton";
-            this.checkFoldersButton.ShowImage = true;
-            // 
-            // separator3
-            // 
-            this.separator3.Name = "separator3";
             // 
             // IktatasMacro
             // 

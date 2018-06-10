@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Office.Tools.Ribbon;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.Outlook;
 
 namespace NitrotervOutlookAddIn
 {
@@ -24,6 +25,16 @@ namespace NitrotervOutlookAddIn
                     RibbonDropDownItem item = Globals.Factory.GetRibbonFactory().CreateRibbonDropDownItem();
                     item.Label = year;
                     yearDropDown.Items.Add(item);
+
+
+                    //sort
+                    List<RibbonDropDownItem> listCopy = new List<RibbonDropDownItem>();
+                    foreach (RibbonDropDownItem yearItem in yearDropDown.Items)
+                        listCopy.Add(yearItem);
+                    yearDropDown.Items.Clear();
+                    foreach (RibbonDropDownItem yearItem in listCopy.OrderByDescending(yearItem => yearItem.Label))
+                        yearDropDown.Items.Add(yearItem);
+
                 }
 
                 if (yearDropDown.Items[0].Label != null || yearDropDown.Items[0].Label != "")
@@ -35,8 +46,10 @@ namespace NitrotervOutlookAddIn
                         projektekDropDown.Items.Add(item);
                     }
                 }
+
+
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 MessageBox.Show(e.Message, "Hiba az adatok a menük feltöltése során!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
