@@ -470,7 +470,7 @@ namespace NitrotervOutlookAddIn
                 {
                     counter++;
                     
-                    name += "[" + projectnumber + "]" + "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
+                    name = "[" + projectnumber + "]" + "[" + sent_date + "]" + "[" + date + "]" + "[" + counter + "]" + subject;
 
                     path = "";
 
